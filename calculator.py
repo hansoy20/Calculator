@@ -19,7 +19,7 @@ def main():
         choice = input("Enter your choice: ")
 
         if choice == "5":
-            print("Done.")
+            print("Done")
             break
 
         if choice not in ("1", "2"):
