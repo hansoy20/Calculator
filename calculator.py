@@ -9,6 +9,11 @@ def subtract(a, b):
 def multiply(a, b):
     return a * b
 
+def divide(a, b):
+    if b == 0:
+        return "Error: Cannot divide by zero"
+    return a / b
+
 
 def main():
     print("Calculator")
@@ -18,6 +23,7 @@ def main():
         print("1 - Add")
         print("2 - Subtract")
         print("3 - Multiply")
+        print("4 - Divide")
         print("5 - exit")
 
         choice = input("Enter your choice: ")
@@ -26,7 +32,7 @@ def main():
             print("Done")
             break
 
-        if choice not in ("1", "2", "3"):
+        if choice not in ("1", "2", "3", "4"):
             print("Invalid choice.")
             continue
 
@@ -45,6 +51,9 @@ def main():
 
         elif choice == "3":
             result = multiply(num1, num2)
+
+        elif choice == "4":
+            result = divide(num1, num2)
 
         print("Result:", result)
 
