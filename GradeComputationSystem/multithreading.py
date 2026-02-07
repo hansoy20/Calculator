@@ -40,11 +40,9 @@ def main():
     print("   MULTITHREADED GWA CALCULATOR")
     print("=" * 50)
     
-    # Get user input
     print("\nEnter grades separated by spaces (0-100):")
     user_input = input("> ")
     
-    # Validate and filter grades
     raw_grades = user_input.split()
     grades_list = [g for g in (validate_grade(grade) for grade in raw_grades) if g is not None]
     
@@ -67,10 +65,8 @@ def main():
     start_time = time.time()
     
     for i in range(num_threads):
-
         start_idx = i * chunk_size
         if i == num_threads - 1:
-
             end_idx = len(grades_list)
         else:
             end_idx = start_idx + chunk_size
@@ -99,6 +95,7 @@ def main():
     else:
         print("No grades to calculate!")
     print("=" * 50)
+
 
 if __name__ == "__main__":
     main()
