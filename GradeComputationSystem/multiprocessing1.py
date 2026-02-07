@@ -5,8 +5,6 @@ def compute_gwa(grades):
     """Calculates GWA. Pure function, easier to test and parallelize."""
     if not grades:
         return 0.0
-    
-    
     return sum(grades) / len(grades)
 
 def main():
@@ -23,16 +21,13 @@ def main():
 
     start_time = time.perf_counter()
 
-    
     print("\n--- Processing Individual Grades ---")
     with multiprocessing.Pool() as pool:
-        # We wrap each grade in a list because your original function expected a list
+        # Wrap each grade in a list because compute_gwa expects a list
         results = pool.map(compute_gwa, [[g] for g in grades_list])
-        
         for i, res in enumerate(results):
             print(f"[Process {i+1}] Grade Verified: {res:.2f}")
 
-    
     print("\n--- Overall GWA Calculation ---")
     with multiprocessing.Pool(processes=1) as pool:
         async_result = pool.apply_async(compute_gwa, (grades_list,))
