@@ -40,3 +40,4 @@ overall_thread.start()
 overall_thread.join()
 
 print(f"\nFinal GWA: {result[0]:.2f}")
+ 
