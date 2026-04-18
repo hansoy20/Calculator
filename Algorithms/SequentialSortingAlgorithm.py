@@ -1,12 +1,10 @@
 import time
 import random
 
-# Generate datasets
 small_data = [random.randint(1, 1000000) for _ in range(1000)]
 medium_data = [random.randint(1, 1000000) for _ in range(100000)]
 large_data = [random.randint(1, 1000000) for _ in range(1000000)]
 
-# Special case: already sorted and reverse sorted
 already_sorted = list(range(1, 1001))
 reverse_sorted = list(range(1000, 0, -1))
 
