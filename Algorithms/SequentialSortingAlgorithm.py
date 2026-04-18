@@ -33,6 +33,5 @@ def run_test(label, dataset):
 
 run_test("Small (1,000)", small_data)
 run_test("Medium (100,000)", medium_data)
-run_test("Large (1,000,000)", large_data)
-run_test("Already Sorted (1,000)", already_sorted)
 run_test("Reverse Sorted (1,000)", reverse_sorted)
+run_test("Large (1,000,000)", large_data)
