@@ -11,5 +11,9 @@ Keith individual reflection: Sequential sorting algorithm
 
 For me, i notice that as the data gets larger it gets slower.
 
+Gian individual reflection: Parallel Searching Algorithm
+
+For me, I noticed that searching through each element one by one gets
+slower as the data gets larger.
 
 
