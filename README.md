@@ -9,6 +9,7 @@ is straightforward, however it is ineffective for big data.
 
 Keith individual reflection: Sequential sorting algorithm
 
+I noticed that as the data gets larger it gets slower. The difference between small and large datasets was very clear since sorting 1,000 elements was almost instant while sorting 1,000,000 elements took much longer. There was no overhead from synchronization or process management since everything runs in one process. This made me realize that sequential sorting is simple but has limits when dealing with large data.
 
 Gian individual reflection: Parallel Searching Algorithm
 
