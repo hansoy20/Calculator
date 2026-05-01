@@ -1,10 +1,10 @@
 # Distributed Order Processing — PDC Lab 1
 
 ## Members
-- Member 1: [Hans Aldrich Saguilayan] — Environment Setup
-- Member 2: [Keith Austria] — Task Distribution
-- Member 3: [Gian Paolo Oga] — Shared Memory & Delays
-- Member 4: [Seth Palgan] — Synchronization & Documentation
+- Member 1: Hans Aldrich Saguilayan — Environment Setup
+- Member 2: Keith Austria — Task Distribution
+- Member 3: Gian Paolo Oga — Shared Memory & Delays
+- Member 4: Seth Palgan — Synchronization & Documentation
 
 ## How to Run
 ```bash
