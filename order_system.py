@@ -1,24 +1,25 @@
-from __future__ import annotations
-
 from mpi4py import MPI
+from multiprocessing import Manager
 import time
 import random
-from typing import Any, Optional
 
 comm = MPI.COMM_WORLD
-rank: int = comm.Get_rank()
-size: int = comm.Get_size()
+rank = comm.Get_rank()
+size = comm.Get_size()
 
-# Ensure we have at least 2 processes (1 master + 1 worker)
 if size < 2:
     if rank == 0:
-        print("Error: This program requires at least 2 MPI processes (1 master + 1 worker)")
-        print("Usage: mpirun -np <n> python order_system.py  (where n >= 2)")
+        print("Error: Requires at least 2 MPI processes")
+        print("Usage: mpirun --oversubscribe -np 4 python order_system.py")
     exit(1)
 
 if rank == 0:
     # Master process
-    orders: list[dict[str, Any]] = [
+    manager = Manager()
+    shared_orders = manager.list()
+    lock = manager.Lock()
+
+    orders = [
         {"id": 1, "item": "Laptop"},
         {"id": 2, "item": "Phone"},
         {"id": 3, "item": "Tablet"},
@@ -32,52 +33,57 @@ if rank == 0:
 
     # Send orders to workers
     for i, order in enumerate(orders):
-        worker_rank: int = (i % (size - 1)) + 1
+        worker_rank = (i % (size - 1)) + 1
         comm.send(order, dest=worker_rank, tag=i)
         print(f"Master --> Sent Order {order['id']} ({order['item']}) to Worker {worker_rank}")
 
-    # Send stop signal
+    # Send stop signal to all workers
     for worker in range(1, size):
         comm.send(None, dest=worker, tag=99)
 
-    # Collect results from workers
-    completed_orders: list[str] = []
+    # Collect results from workers via MPI
+    all_results = []
     for worker in range(1, size):
-        result: Optional[list[str]] = comm.recv(source=worker)
-        if result is not None:
-            completed_orders.extend(result)
+        worker_results = comm.recv(source=worker)
+        if worker_results:
+            all_results.extend(worker_results)
 
-    # Wait for all workers
+    # Store in shared memory using Lock
+    print("\nMaster: Storing results in shared memory...\n")
+    for result in all_results:
+        with lock:
+            shared_orders.append(result)
+            print(f"  [LOCKED] Master stored: {result}")
+
     comm.Barrier()
 
     # Final output
     print("\n=== Final Completed Orders (Synchronized) ===")
-    for completed in completed_orders:
+    for completed in shared_orders:
         print(completed)
-    print(f"\nTotal orders processed: {len(completed_orders)}")
+    print(f"\nTotal orders processed: {len(shared_orders)}")
 
 else:
     # Worker processes
-    processed_results: list[str] = []
-    
+    processed = []
+
     while True:
-        data: Optional[Any] = comm.recv(source=0, tag=MPI.ANY_TAG)
+        data = comm.recv(source=0, tag=MPI.ANY_TAG)
 
         if data is None:
             break
 
-        order: dict[str, Any] = data
+        order = data
 
         # Simulate processing delay
-        delay: float = random.uniform(0.5, 2.0)
+        delay = random.uniform(0.5, 2.0)
         print(f"  Worker {rank} processing Order {order['id']} ({order['item']})... ({delay:.1f}s)")
         time.sleep(delay)
 
-        result: str = f"Order {order['id']} ({order['item']}) -- processed by Worker {rank}"
-        processed_results.append(result)
+        result = f"Order {order['id']} ({order['item']}) -- processed by Worker {rank}"
+        processed.append(result)
         print(f"  Worker {rank} completed: {result}")
 
-    # Send results back to master
-    comm.send(processed_results, dest=0)
-
+    # Send all results back to master
+    comm.send(processed, dest=0)
     comm.Barrier()
